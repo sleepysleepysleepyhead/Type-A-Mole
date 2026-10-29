@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Type-a-Mole</title>
+
+<!-- "preconnect" - connects the link to code instead of downloading it -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" href="mole.png">
+
+</head>
+<body>
+
+  <div id="fit" class="fit">
+  <div class="wrapper">
+
+    <!-- ================= GAME PANEL ================= -->
+    <div id="game" class="game">
+
+      <!-- "Level 2" pop-up: covers the game and pauses it for a moment every time the level changes -->
+      <div id="levelScreen" class="level-screen hidden">
+        <div class="level-box">
+          <div class="level-small">Get ready!</div>
+          <div id="levelNumber" class="level-number">Level 1</div>
+          <div id="levelHint" class="level-hint"></div>
+        </div>
+      </div>
+
+      <div class="title-sign">Type-a-Mole <span>🐾</span></div>
+
+      <!-- the grass scene with the six holes -->
+      <div class="scene">
+
+        <!-- "svg" - creates graphic on code -->
+        <svg class="scene-bg" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+
+          <!-- "defs" is an svg-specific container for definitions that are normally not displayed directly -->
+          <defs>
+
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"> <!-- this line is for smooth color transition -->
+              <!-- x1 & y1 - starting points | x2 & y2 - ending point -->
+
+                                                      <!-- "stop" defines a color point in a gradient --> 
+                                                      <!-- "offset=0" means the beggining of the gradient -->
+              <stop offset="0" stop-color="#7fd0f4"/> <!-- this line says "at the top of the gradient, use this color" --> 
+
+                                                      <!-- "offset=1" - the end of the gradient -->
+              <stop offset="1" stop-color="#cfeefb"/> <!-- this line says "at the bottom of the gradient, use this color" -->
+
+            </linearGradient> 
+            
+            <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#8bcc52"/>
+              <stop offset="1" stop-color="#5fae3c"/>
+            </linearGradient>
+
+            <!-- "pattern" - an SVG element used to create a repeating design -->
+            <pattern id="bushes" width="100" height="70" patternUnits="userSpaceOnUse" x="0" y="70">
+              <circle cx="25" cy="44" r="24" fill="#3d9648"/>
+              <circle cx="75" cy="48" r="24" fill="#4aa953"/>
+              <circle cx="50" cy="30" r="20" fill="#5cba5e"/>
+            </pattern>
+
+            <pattern id="posts" width="96" height="62" patternUnits="userSpaceOnUse" x="34" y="88">
+              <rect width="16" height="62" rx="4" fill="#b9793a" stroke="#8a521f" stroke-width="2"/>
+            </pattern>
+          </defs>
+
+          <rect width="640" height="400" fill="url(#sky)"/>
+
+          <!-- clouds -->
+          <!-- "g" means group in SVG, same as div -->
+          <g fill="#ffffff">
+            <ellipse cx="70" cy="48" rx="36" ry="16"/><ellipse cx="50" cy="56" rx="26" ry="13" ><ellipse cx="96" cy="55" rx="28" ry="13"/>
+            <ellipse cx="560" cy="34" rx="38" ry="16"/><ellipse cx="540" cy="44" rx="26" ry="12"/><ellipse cx="586" cy="42" rx="26" ry="12"/>
+            <ellipse cx="340" cy="26" rx="26" ry="10"/>
+          </g>
+
+          <!-- bushes, fence, grass -->
+          <rect x="0" y="70" width="640" height="70" fill="url(#bushes)"/>
+          <rect x="0" y="88" width="640" height="62" fill="url(#posts)"/>
+          <rect x="0" y="104" width="640" height="9" fill="#d19552" stroke="#8a521f" stroke-width="2"/>
+          <rect x="0" y="124" width="640" height="9" fill="#d19552" stroke="#8a521f" stroke-width="2"/>
+          <rect x="0" y="140" width="640" height="260" fill="url(#grass)"/>
+          <rect x="0" y="140" width="640" height="6" fill="#6db43f"/>
+
+          <!-- grass tufts -->
+          <path fill="none" stroke="#3f8f2f" stroke-width="3" stroke-linecap="round"
+            d="M40 205 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M130 335 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M250 185 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M320 372 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M450 200 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M520 340 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M605 235 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M80 290 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M210 262 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M385 305 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M570 175 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M612 365 l-4 -9 m4 9 l0 -11 m0 11 l4 -9
+               M30 368 l-4 -9 m4 9 l0 -11 m0 11 l4 -9"/>
+        </svg>
+
+        <!-- new look: sky on top, dirt below (drawn by the css), plus clouds and grass tufts -->
+        <div class="sky-edge"></div>
+        <div class="cloud" style="left:6%;top:15%"></div>
+        <div class="cloud" style="left:30%;top:7%;transform:scale(.8)"></div>
+        <div class="cloud" style="left:52%;top:17%;transform:scale(1.2)"></div>
+        <div class="cloud" style="left:76%;top:8%"></div>
+        <div class="tuft" style="left:6%;top:47%"></div>
+        <div class="tuft" style="left:94%;top:47%"></div>
+        <div class="tuft" style="left:33%;top:54%"></div>
+        <div class="tuft" style="left:66%;top:54%"></div>
+        <div class="tuft" style="left:6%;top:79%"></div>
+        <div class="tuft" style="left:94%;top:79%"></div>
+        <div class="tuft" style="left:33%;top:72%"></div>
+        <div class="tuft" style="left:66%;top:72%"></div>
+
+        <!-- the following are just containers for the mole's structure that the css can call out -->
+        <div class="holes">
+          <div class="mound">
+            <div class="hole-back"></div>
+            <div class="mole-clip">
+              <div class="mole">
+                <div class="mole-art">
+                  <div class="ear ear-left"></div>
+                  <div class="ear ear-right"></div>
+                  <div class="eye eye-left"></div>
+                  <div class="eye eye-right"></div>
+                  <div class="muzzle"><div class="nose"></div><div class="teeth"></div></div>
+                </div>
+                <div class="word-label"></div>
+                <div class="mole-hammer"><div class="mh-handle"></div><div class="mh-head"></div></div>
+                <div class="paw paw-left"></div>
+                <div class="paw paw-right"></div>
+              </div>
+            </div>
+            <div class="hole-front"></div>
+          </div>
+
+          <div class="mound">
+            <div class="hole-back"></div>
+            <div class="mole-clip">
+              <div class="mole">
+                <div class="mole-art">
+                  <div class="ear ear-left"></div>
+                  <div class="ear ear-right"></div>
+                  <div class="eye eye-left"></div>
+                  <div class="eye eye-right"></div>
+                  <div class="muzzle"><div class="nose"></div><div class="teeth"></div></div>
+                </div>
+                <div class="word-label"></div>
+                <div class="mole-hammer"><div class="mh-handle"></div><div class="mh-head"></div></div>
+                <div class="paw paw-left"></div>
+                <div class="paw paw-right"></div>
+              </div>
+            </div>
+            <div class="hole-front"></div>
+          </div>
+
+          <div class="mound">
+            <div class="hole-back"></div>
+            <div class="mole-clip">
+              <div class="mole">
+                <div class="mole-art">
+                  <div class="ear ear-left"></div>
+                  <div class="ear ear-right"></div>
+                  <div class="eye eye-left"></div>
+                  <div class="eye eye-right"></div>
+                  <div class="muzzle"><div class="nose"></div><div class="teeth"></div></div>
+                </div>
+                <div class="word-label"></div>
+                <div class="mole-hammer"><div class="mh-handle"></div><div class="mh-head"></div></div>
+                <div class="paw paw-left"></div>
+                <div class="paw paw-right"></div>
+              </div>
+            </div>
+            <div class="hole-front"></div>
+          </div>
+
+          <div class="mound">
+            <div class="hole-back"></div>
+            <div class="mole-clip">
+              <div class="mole">
+                <div class="mole-art">
+                  <div class="ear ear-left"></div>
+                  <div class="ear ear-right"></div>
+                  <div class="eye eye-left"></div>
+                  <div class="eye eye-right"></div>
+                  <div class="muzzle"><div class="nose"></div><div class="teeth"></div></div>
+                </div>
+                <div class="word-label"></div>
+                <div class="mole-hammer"><div class="mh-handle"></div><div class="mh-head"></div></div>
+                <div class="paw paw-left"></div>
+                <div class="paw paw-right"></div>
+              </div>
+            </div>
+            <div class="hole-front"></div>
+          </div>
+
+          <div class="mound">
+            <div class="hole-back"></div>
+            <div class="mole-clip">
+              <div class="mole">
+                <div class="mole-art">
+                  <div class="ear ear-left"></div>
+                  <div class="ear ear-right"></div>
+                  <div class="eye eye-left"></div>
+                  <div class="eye eye-right"></div>
+                  <div class="muzzle"><div class="nose"></div><div class="teeth"></div></div>
+                </div>
+                <div class="word-label"></div>
+                <div class="mole-hammer"><div class="mh-handle"></div><div class="mh-head"></div></div>
+                <div class="paw paw-left"></div>
+                <div class="paw paw-right"></div>
+              </div>
+            </div>
+            <div class="hole-front"></div>
+          </div>
+
+          <div class="mound">
+            <div class="hole-back"></div>
+            <div class="mole-clip">
+              <div class="mole">
+                <div class="mole-art">
+                  <div class="ear ear-left"></div>
+                  <div class="ear ear-right"></div>
+                  <div class="eye eye-left"></div>
+                  <div class="eye eye-right"></div>
+                  <div class="muzzle"><div class="nose"></div><div class="teeth"></div></div>
+                </div>
+                <div class="word-label"></div>
+                <div class="mole-hammer"><div class="mh-handle"></div><div class="mh-head"></div></div>
+                <div class="paw paw-left"></div>
+                <div class="paw paw-right"></div>
+              </div>
+            </div>
+            <div class="hole-front"></div>
+          </div>
+        </div>
+
+        <!-- username screen (shown first, sits on top of the scene) -->
+        <div id="usernameScreen" class="username-screen">
+          <div class="name-card">
+            <p>Enter your name to play:</p>
+            <input type="text" id="usernameInput" placeholder="Your name" autocomplete="off" maxlength="12">
+            <button id="startBtn">Start Game</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- timer, typing box, lives and score -->
+      <div id="gameScreen" class="game-screen off">
+
+        <!-- bottom bar: timer, typing box and message (sits at the bottom of the screen) -->
+        <div class="bottom-bar">
+          <div class="timer-bar">
+            <div id="timerFill" class="timer-fill"></div>
+            <div id="timerLabel" class="timer-label">Time: 3</div>
+          </div>
+
+          <input type="text" id="wordInput" placeholder="Type the word and press Enter..." autocomplete="off" disabled>
+
+          <div id="message" class="message"></div>
+        </div>
+
+        <div class="stats">
+
+          <!-- "span" small container for text -->
+          <!-- top bar: hearts on the left, score + level in the middle, player + restart on the right -->
+          <span class="hud-left"><span id="hearts">❤️❤️❤️</span> <span id="lives" class="hidden">3</span></span>
+
+          <span class="hud-center">
+            <span class="pill">SCORE : <span id="score">0</span></span>
+            <span class="pill">LEVEL : <span id="level">1</span></span>
+          </span>
+
+          <span class="hud-right">
+            <span class="pill name-pill">Player: <span id="playerName"></span></span>
+            <button id="restartBtn" class="small secondary">↻ Restart</button>
+          </span>
+          <!-- "small" - makes the button smaller, "secondary" - less important/alternative button -->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- ================= GAME OVER (cracked screen + mole with hammer) ================= -->
+  <div id="gameOver" class="game-over hidden"> <!-- hides the game over screen first -->
+
+    <!-- the last mole's hammer hits (flash + shockwave + crater), the cracks spread, then the game over screen shows -->
+    <div class="crater"></div>        <!-- black circle -->
+    <div class="shockwave"></div>     <!-- white circle wave expanding -->
+    <div class="impact-flash"></div>  <!-- brief flash of light -->
+
+    <svg class="cracks" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <!-- "viewBox" - coordinates where to start and where to end-->
+    <!-- "preserveAspectRatio="none"" allows to stretch to fit the container-->
+    <!-- "aria-hidden="true"" hides the element from screen readers -->
+
+      <!-- coordinates of the crack lines -->
+      <polyline points="50,52 44,44 47,36 38,28 40,18 30,10 32,0"/>
+      <polyline points="50,52 58,43 55,34 64,26 62,15 72,6 70,0"/>
+      <polyline points="50,52 41,58 33,56 24,64 14,62 6,70 0,68"/>
+      <polyline points="50,52 60,60 64,70 74,74 80,84 90,88 100,86"/>
+      <polyline points="50,52 48,64 52,74 46,84 50,92 47,100"/>
+      <polyline points="50,52 62,50 72,44 82,46 90,38 100,36"/>
+      <polyline points="50,52 38,48 28,40 18,42 8,32 0,30"/>
+      <polyline points="50,52 56,66 66,68 70,78 78,82"/>
+      <polyline points="38,28 30,32 24,30"/>
+      <polyline points="64,70 62,80 68,88"/>
+      <polyline points="50,52 54,45 51,38 57,31 55,22 61,14"/>
+      <polyline points="50,52 45,60 47,69 41,76 43,86"/>
+      <polyline points="50,52 66,55 76,52 86,57 94,54"/>
+      <polyline points="50,52 34,50 26,54 16,50 8,54"/>
+      <polyline points="62,50 66,42 74,40"/>
+      <polyline points="36,56 30,66 22,68"/>
+    </svg>
+
+                          <!-- coordinates of their movements -->
+    <span class="debris" style="--dx:-300px;--dy:-190px;--rot:240deg"></span>
+    <span class="debris" style="--dx:280px;--dy:-210px;--rot:-200deg"></span>
+    <span class="debris" style="--dx:-360px;--dy:60px;--rot:300deg"></span>
+    <span class="debris" style="--dx:340px;--dy:90px;--rot:-260deg"></span>
+    <span class="debris" style="--dx:-120px;--dy:-260px;--rot:180deg"></span>
+    <span class="debris" style="--dx:140px;--dy:240px;--rot:-320deg"></span>
+
+    <div class="over-content"> <!-- main game -->
+    <div class="over-stage">   <!-- crack -->
+      <div class="burst">      <!-- game over screen -->
+        <div class="burst-outline"></div>
+        <div class="burst-fill"></div>
+        <div class="burst-text">GAME OVER!</div>
+      </div>
+    </div>
+
+    <p id="finalScore" class="over-score"></p>
+
+      <!-- ================= SCOREBOARD (hidden while playing, shows together with the game over screen) ================= -->
+      <div class="scoreboard">
+        <h2>Scoreboard</h2>
+        <div class="score-card">
+          <table>
+            <thead>                                                     <!-- means table header -->
+              <tr>  <th>#</th>  <th>Username</th> <th>Score</th>  </tr> <!-- means table row -->
+            </thead>                                                    <!-- "th" - individual heading cell -->
+            <tbody id="scoreList"></tbody>                              <!-- means table body -->
+          </table>
+        </div>
+      </div>
+
+    <div class="over-buttons">
+      <button id="playAgainBtn">Play Again</button>
+      <button id="newPlayerBtn" class="secondary">New Player</button>
+    </div>
+    </div>
+  </div>
+
+  <button id="muteBtn" class="mute" title="Sound on / off">🔊</button>
+  <!-- "title" - mogawas nga text ig hover sa mouse sa button -->
+
+  <script src="script.js"></script>
+</body>
+</html>
